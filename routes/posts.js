@@ -2,23 +2,88 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
 
-router.get('/',(req,res)=>{
-    res.send("This is post")
+// Get all the post can limit the post by adding .limit after find()
+router.get('/', async (req, res) => {
+
+    try {
+        let allPost = await Post.find();
+        res.json(allPost)
+    } catch (err) {
+        res.json({ message: err })
+    }
 })
 
-router.post('/',(req,res)=>{
+// Post a post into the database and check that it is already in database if so then don't save 
+router.post('/', async (req, res) => {
     const post = new Post({
-        title:req.body.title,
-        description:req.body.description
+        title: req.body.title,
+        description: req.body.description
     })
 
-    post.save()
-    .then(data=>{
-        res.json(data)
-    })
-    .catch(err=>{
-        res.json({message: err})
-    })
+    try {
+        let savedPost = await post;
+        Post.findOne({ title: post.title })
+            .then(result => {
+                if (!result) {
+                    savedPost.save();
+                    res.json(savedPost)
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    } catch (err) {
+        res.json({ message: err })
+    }
+})
+
+// Find a specific post
+router.get("/:postID", async (req, res) => {
+    try {
+        let requestedPost = await Post.findById(req.params.postID)
+        res.json(requestedPost)
+    } catch (err) {
+        res.json({ message: err })
+    }
+})
+
+// Delete a post
+router.delete("/:postID", async (req, res) => {
+    try {
+         removePost = await Post.deleteOne({ _id: req.params.postID })
+            .then(result => {
+                if (result)
+                    res.json(removePost)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    } catch (err) {
+        res.json({ message: err })
+    }
+})
+
+// Update a post
+router.patch("/:postID", async (req, res) => {
+    try {
+        Post.findById({ _id: req.params.postID })
+            .then(result => {
+                if (result) {
+                    let updatedPost = Post.updateOne(
+                        { _id: req.params.postID },
+                        { $set: { title: req.body.title } }
+                    )
+                    res.json(updatedPost)
+                }else{
+                    res.send("Sorry")
+                }
+            })
+            .catch(err => {
+                res.send(err)
+            })
+    } catch (err) {
+        res.json({ message: err })
+    }
 })
 
 module.exports = router;
