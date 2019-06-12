@@ -3,11 +3,19 @@ const router = express.Router();
 const Post = require("../models/Post");
 
 // Get all the post can limit the post by adding .limit after find()
-router.get('/', async (req, res) => {
+router.get('/getAllpost', async (req, res) => {
 
     try {
-        let allPost = await Post.find();
-        res.json(allPost)
+        let allPost = await Post.find()
+        .then(result=>{
+            if(result){
+                let allPost = result;
+                res.json(allPost)
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+        })
     } catch (err) {
         res.json({ message: err })
     }

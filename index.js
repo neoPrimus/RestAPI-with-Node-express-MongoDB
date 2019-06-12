@@ -8,8 +8,8 @@ app.set('port', process.env.PORT || 4500)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const postRoutes = require("./routes/posts");
-app.use('/post', postRoutes);
+const apiRoutes = require("./routes/router");
+app.use('/api/v1', apiRoutes);
 
 mongoose.connect( process.env.Database_Connection,
 { useNewUrlParser: true },()=>{
