@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/",(req,res)=>{
-    res.json({status:"postApi",result:"ok"})
+    res.json({status:"rohanAPI",result:"ok"})
 })
 
 router.use(function timeLog (req, res, next) {
     console.log('Time: ', Date.now())
+    console.log(req.method+" via "+req.originalUrl)
     next()
   })
 
