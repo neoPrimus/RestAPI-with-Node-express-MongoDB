@@ -6,7 +6,7 @@ router.get("/",(req,res)=>{
 })
 
 router.use(function timeLog (req, res, next) {
-    console.log('Time: ', Date.now())
+    console.log('Time: ',new Date(Date.now()))
     console.log(req.method+" via "+req.originalUrl)
     next()
   })
