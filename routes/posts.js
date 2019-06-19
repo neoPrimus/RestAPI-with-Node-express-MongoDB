@@ -1,16 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
+const { TokenAuthentication } = require("../validation/authentication")
 
 // Get all the post can limit the post by adding .limit after find()
-router.get('/getAllpost', async (req, res) => {
-
+router.get('/getAllpost',TokenAuthentication, async (req, res) => {
+    console.log(TokenAuthentication)
     try {
         let allPost = await Post.find()
         .then(result=>{
-            if(result){
+            if(result.length>0){
                 let allPost = result;
                 res.json(allPost)
+            }else{
+                res.send("Sorry no post")
             }
         })
         .catch(err=>{

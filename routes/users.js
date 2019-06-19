@@ -87,7 +87,7 @@ router.post("/login",async (req,res)=>{
                 return res.status(403).send(PasswordErr);
             } 
             // const id = Math.ceil(Math.random() * 9999999);
-            const login_token = jwt.sign({_id:user._id},process.env.TOKEN_SECRET,{ expiresIn: '60s' })
+            const login_token = jwt.sign({_id:user._id},process.env.TOKEN_SECRET/*,{ expiresIn: '60s' }*/)
             let Logindata = ({
                 status: 'true',
                 message: 'User sucessfully logged in',
